@@ -75,15 +75,13 @@ class Rr
   end
 
   def create_route
-    # begin
-    # raise "Create stations at first" if @stations.empty?
-    # rescue
-    #   puts "Create stations at first"
-    # create
-    # end
+    begin
+      raise "Create stations at first" if @stations.empty?
+      rescue
+        puts "Create stations at first"
+      create
+    end
 
-    
-    raise "Create stations at first" if @stations.empty?
     puts "Enter the name of the route. Or '0' to go back."
     name = gets.chomp.capitalize
     if name == "0"
@@ -95,7 +93,7 @@ class Rr
       arrive = select_station
       route = Route.new(name, depart, arrive)
       @routes << route
-      puts "You have created a new route #{route.name}: #{depart.name} - #{arrive.name} ." # ссылки не работают, если станции вводить с заглавной буквы.
+      puts "You have created a new route #{route.name}: #{depart.name} - #{arrive.name} ." 
     end
     rescue => e
     puts e.message
@@ -217,7 +215,7 @@ class Rr
     route.add_station(station)
     puts "You have added a station #{station.name} to the route #{route.name}."
   end
-
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   def delete_station_from_route
     puts "Enter the route number:"
     route = select_route
@@ -225,8 +223,12 @@ class Rr
     puts "Enter the station number to delete:"
     station = select_station
     
-    route.delete_station(station)
-    puts "You have deleted a station #{station.name} from the route #{route.name}."
+    if station != @depart || station != @arrive
+      route.delete_station(station) 
+      puts "You have deleted a station #{station.name} from the route #{route.name}."
+    else 
+      puts "You can't delete the stations of arrival or departure."
+    end
   end
 
   def speed_up

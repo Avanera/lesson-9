@@ -10,25 +10,26 @@ class Rr
     @routes = []
     #seed
   end
+
 =begin
   def seed
-    station1 = Station.new('M')
+    station1 = Station.new('mmm-mm')
     @stations << station1
-    station2 = Station.new('P')
+    station2 = Station.new('ppp-pp')
     @stations << station2
-    station3 = Station.new('N')
+    station3 = Station.new('nnn-nn')
     @stations << station3
 
     route = Route.new("K", station1, station2)
     @routes << route
 
     route.add_station(station3)
-    route.delete_station(station3)
+    #route.delete_station(station3)
 
-    train1 = PassengerTrain.new('123', "Passenger")
+    train1 = PassengerTrain.new('555-55', "Passenger")
     @trains << train1
 
-    train2 = CargoTrain.new('345', "Cargo")
+    train2 = CargoTrain.new('666-66', "Cargo")
     @trains << train2
 
 
@@ -162,7 +163,8 @@ class Rr
       puts "#{index} - Train #{train.number}: "
       train.show_speed
       train.show_wagons
-      puts "On route #{train.route.name}."
+      puts "On route #{train.route.name}." unless train.route == nil 
+      # TODO : если у поезда еще нет маршрута, то выпадает ошибка. -??? 
       puts "Currently in #{train.current_station.name}."
     end
   end 
@@ -223,7 +225,7 @@ class Rr
     puts "Enter the station number to delete:"
     station = select_station
     
-    if station != @depart || station != @arrive
+    if station != route.depart || station != route.arrive
       route.delete_station(station) 
       puts "You have deleted a station #{station.name} from the route #{route.name}."
     else 

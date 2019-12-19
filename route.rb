@@ -1,8 +1,7 @@
 class Route
   include InstanceCounter
   attr_reader :stations, :depart, :arrive, :name
-  NAME_FORMAT = /^[a-z]+\s*\'*\-*\d*$/i
-  STATION_FORMAT = /^[a-z]+\s*\'*\-*\d*$/i
+  NAME_FORMAT = /^[a-z\s\'\-\d]+$/i
 
   def initialize(name, depart, arrive)
     @name = name
@@ -30,8 +29,8 @@ class Route
   def validate!
     raise "Route name can't be nil" if @name == ''
     raise "Route name has invalid format" if @name !~ NAME_FORMAT 
-    raise "Station name can't be nil" if @arrive == '' || @depart == ''
-    raise "Station name has invalid format" if @arrive !~ STATION_FORMAT || @depart !~ STATION_FORMAT
+    raise "Station name can't be nil" if (@arrive == '') || (@depart == '')
+    raise "Station name has invalid format" if (@arrive.name !~ NAME_FORMAT) || (@depart.name !~ NAME_FORMAT)
   end
 end
     

@@ -2,7 +2,7 @@ class Station
   include InstanceCounter
   attr_reader :trains, :name
   @@all_stations = []
-  NAME_FORMAT = /^[a-z]+\s*\'*\-*\d*$/i
+  NAME_FORMAT = /^[a-z\s*\'*\-*\d*]+$/i
 
   def initialize(name)
     @name = name

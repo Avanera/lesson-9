@@ -14,7 +14,5 @@ class Wagon
   def validate!
     raise "Number can't be nil" if @number == ''
     raise "Number has invalid format. Enter 6 numbers without spaces." if @number !~ NUMBER_FORMAT 
-    raise "Type can't be nil" if @type == ''
-    raise "Type has invalid format. Enter 'Passenger' or 'Cargo'." if @type !~ TYPE_FORMAT
   end
 end

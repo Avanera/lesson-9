@@ -15,12 +15,12 @@ class Train
     @number = number
     @type = type
     @speed = 0
-    @wagons = []
-    @@trains << self
-    @@trains_hash[number] = self
-    register_instance
     validate!
-  end
+    @wagons = []
+    register_instance
+    @@trains_hash[number] = self
+    @@trains << self
+    end
 
   def valid?
     validate!
@@ -31,9 +31,7 @@ class Train
 
   def validate!
     raise "Number can't be nil" if @number == ''
-    raise "Number has invalid format. Enter три буквы или цифры в любом порядке, необязательный дефис (может быть, а может нет) и еще 2 буквы или цифры после дефиса." if @number !~ NUMBER_FORMAT 
-    raise "Type can't be nil" if @type == ''
-    raise "Type has invalid format. Enter 'Passenger' or 'Cargo'." if @type !~ TYPE_FORMAT
+    raise "Number has invalid format. Should be три буквы или цифры в любом порядке, необязательный дефис (может быть, а может нет) и еще 2 буквы или цифры после дефиса." if @number !~ NUMBER_FORMAT 
   end
 
   def self.find(number)

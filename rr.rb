@@ -63,18 +63,53 @@ class Rr
   end
 
   def create_station
-    puts "Enter a station name"
-    new_station = gets.chomp.capitalize
-    @stations << Station.new(new_station)
+    begin
+      puts "Enter a station name"
+      new_station = gets.chomp.capitalize
+      @stations << Station.new(new_station)
+      rescue => e
+      puts e.message
+      retry
+    end
     puts "You have created a new station '#{new_station}'."
+  end
+
+  def create_route
+    # begin
+    # raise "Create stations at first" if @stations.empty?
+    # rescue
+    #   puts "Create stations at first"
+    # create
+    # end
+
+    
+    raise "Create stations at first" if @stations.empty?
+    puts "Enter the name of the route. Or '0' to go back."
+    name = gets.chomp.capitalize
+    if name == "0"
+      create
+    else 
+      puts "Enter the station of departure number:"
+      depart = select_station
+      puts "Enter the station of arrival number:"
+      arrive = select_station
+      route = Route.new(name, depart, arrive)
+      @routes << route
+      puts "You have created a new route #{route.name}: #{depart.name} - #{arrive.name} ." # ссылки не работают, если станции вводить с заглавной буквы.
+    end
+    rescue => e
+    puts e.message
+    retry
+    
   end
 
   def create_train
    begin
-      puts "Enter the number of the train"
-      number = gets.chomp
       puts "Enter the type of the train: Passenger or Cargo."
       type = gets.chomp.capitalize
+      raise "Type has invalid format. Should be 'Passenger' or 'Cargo'." if type !~ Train::TYPE_FORMAT
+      puts "Enter the number of the train"
+      number = gets.chomp
       train = PassengerTrain.new(number, type) if type == "Passenger"
       train = CargoTrain.new(number, type) if type == "Cargo"
    rescue => e
@@ -82,16 +117,22 @@ class Rr
       retry
     end
     @trains << train
-    puts "You have created a new #{type} train '#{number}'."
+    puts "You have created a new #{type} train '#{number}'." if @trains.include? train
   end
 
   def create_wagon
-    puts "Enter the number of the wagon"
-    number = gets.chomp.to_i
-    puts "Enter the type of the wagon: Passenger or Cargo."
-    type = gets.chomp.capitalize
-    @wagons << PassengerWagon.new(number, type) if type == "Passenger"
-    @wagons << CargoWagon.new(number, type) if type == "Cargo"
+    begin
+      puts "Enter the type of the wagon: Passenger or Cargo."
+      type = gets.chomp.capitalize
+      raise "Type has invalid format. Should be 'Passenger' or 'Cargo'." if type !~ Wagon::TYPE_FORMAT
+      puts "Enter the number of the wagon"
+      number = gets.chomp
+      @wagons << PassengerWagon.new(number, type) if type == "Passenger"
+      @wagons << CargoWagon.new(number, type) if type == "Cargo"
+      rescue => e
+      puts e.message
+      retry
+    end
     puts "You have created a new #{type} wagon № #{number}."
   end
 
@@ -143,22 +184,6 @@ class Rr
   def select_wagon
     show_wagons
     @wagons[gets.to_i - 1]
-  end
-
-  def create_route
-    puts "Enter the name of the route"
-    name = gets.chomp.capitalize
-    puts "Enter the station of departure number:"
-
-    depart = select_station
-
-    puts "Enter the station of arrival number:"
-   
-    arrive = select_station
-
-    route = Route.new(name, depart, arrive)
-    @routes << route
-    puts "You have created a new route #{route.name}: #{depart.name} - #{arrive.name} ." # ссылки не работают, если станции вводить с заглавной буквы.
   end
 
   def create

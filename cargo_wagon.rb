@@ -1,19 +1,7 @@
 class CargoWagon < Wagon
-  def initialize(number, type, volume)
-    super(number, type)
-    @volume = volume.to_i
-    @available_volume = volume.to_i
-  end
 
-  def occupy_volume(number)
-    @available_volume = @available_volume - number.to_i
-  end
-
-  def occupied_volume
-    @volume - @available_volume
-  end
-
-  def available_volume
-    @available_volume
+  def occupy(number)
+    @available -= number.to_i
+    raise "Not possible to occupy #{number} m3 in this wagon. Available volume in the wagon is #{@available}." if number.to_i > @available
   end
 end

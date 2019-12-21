@@ -23,9 +23,9 @@ class Train
     end
 # написать метод, который принимает блок и проходит по всем вагонам поезда (вагоны 
 # должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
-  def each_wagon(&block)
+  def each_wagon
     @wagons.each do |wagon|
-      block.call(wagon)
+      yield(wagon)
     end
   end
 
@@ -75,8 +75,9 @@ class Train
   end
 
   def delete_wagons(wagon)
+    raise "You can not disconnect wagons from this train." if @wagons.empty?
     @wagons.delete(wagon) if @speed == 0 && @wagons.size >= 1  
-    puts "The wagons quantity of train #{self.number} is #{@wagons.size}."
+    puts "A wagon was disconnected. The wagons quantity of train #{self.number} is #{@wagons.size}."
   end
 
 =begin

@@ -13,9 +13,9 @@ class Station
   end
 #написать метод, который принимает блок и 
 #проходит по всем поездам на станции, передавая каждый поезд в блок.
-  def each_train(&block)
+  def each_train
     @trains.each do |train|
-      block.call(train)
+      yield(train)
     end
   end
 

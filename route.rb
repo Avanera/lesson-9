@@ -17,7 +17,8 @@ class Route
   end
 
   def delete_station(station)
-    @stations.delete(station) if (station != @depart) || (station != @arrive)
+    raise "You can not delete the station of arrival or departure" if station == @depart || station == @arrive
+    @stations.delete(station)
   end
 
   def show_stations

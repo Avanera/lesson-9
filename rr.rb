@@ -8,43 +8,43 @@ class Rr
     @trains = []
     @wagons = []
     @routes = []
-    #seed
+    seed
   end
 
 
-  # def seed
-  #   station1 = Station.new('mmm-mm')
-  #   @stations << station1
-  #   station2 = Station.new('ppp-pp')
-  #   @stations << station2
-  #   station3 = Station.new('nnn-nn')
-  #   @stations << station3
+  def seed
+    station1 = Station.new('mmm-mm')
+    @stations << station1
+    station2 = Station.new('ppp-pp')
+    @stations << station2
+    station3 = Station.new('nnn-nn')
+    @stations << station3
 
-  #   route = Route.new("K", station1, station2)
-  #   @routes << route
+    route = Route.new("K", station1, station2)
+    @routes << route
 
-  #   route.add_station(station3)
-  #   #route.delete_station(station3)
+    route.add_station(station3)
+    #route.delete_station(station3)
 
-  #   train1 = PassengerTrain.new('555-55', "Passenger")
-  #   @trains << train1
+    train1 = PassengerTrain.new('555-55', "Passenger")
+    @trains << train1
 
-  #   train2 = CargoTrain.new('666-66', "Cargo")
-  #   @trains << train2
+    train2 = CargoTrain.new('666-66', "Cargo")
+    @trains << train2
 
 
-  #   train1.take_route(route)
-  #   train2.take_route(route)
+    train1.take_route(route)
+    train2.take_route(route)
 
-  #   wagon1 = PassengerWagon.new("230000", "Passenger", "54")
-  #   @wagons << wagon1
+    wagon1 = PassengerWagon.new("230000", "Passenger", "54")
+    @wagons << wagon1
 
-  #   wagon2 = CargoWagon.new("340000", "Cargo", "1000")
-  #   @wagons << wagon2
+    wagon2 = CargoWagon.new("340000", "Cargo", "1000")
+    @wagons << wagon2
 
-  #   train1.add_wagons(wagon1)
-  #   train2.add_wagons(wagon2)
-  # end
+    train1.add_wagons(wagon1)
+    train2.add_wagons(wagon2)
+  end
 
 
   def info
@@ -199,7 +199,7 @@ class Rr
 
   def show_trains
     @trains.each.with_index(1) do |train, index|
-      puts "#{index} - Train #{train.number}: "
+      puts "#{index} - Train #{train.number}, type #{train.type}"
       train.show_speed
       train.show_wagons
       puts "On route #{train.route.name}." unless train.route == nil 
@@ -224,6 +224,7 @@ class Rr
     show_wagons
     @wagons[gets.to_i - 1]
   end
+
 
   def create
     puts "    Enter 1, if you want to create a STATION.
@@ -266,7 +267,7 @@ class Rr
   end
 
 
-  def delete_station_from_route
+  def delete_station_from_route # ТУТ КАКОЙ-ТО КОСЯК
     raise "There are no routes yet." if @routes.empty?
 
     puts "Enter the route number:"
@@ -274,8 +275,6 @@ class Rr
 
     puts "Enter the station number to delete:"
     station = select_station
-
-    raise "You can not delete the station of arrival or departure" if station == route.depart || station == route.arrive
     
     route.delete_station(station) 
     puts "You have deleted a station #{station.name} from the route #{route.name}."
@@ -335,10 +334,8 @@ class Rr
     raise "There are no trains yet." if @trains.empty?
     puts "Enter the train number:"
     train = select_train
-    raise "There can not disconnect wagons from this train" if train.wagons.empty?
     puts "Enter the wagon number to disconnect:"
     wagon = select_wagon
-
     train.delete_wagons(wagon)
         rescue => e
       puts e.message
@@ -374,30 +371,22 @@ class Rr
     puts e.message
   end
 
-  def occupy_seat
+  def occupy
     raise "There are no wagons yet." if @wagons.empty?
-    puts "Enter the passenger wagon number:"
+    puts "Enter the wagon number:"
     wagon = select_wagon
-    raise "You should choose Passenger wagon." if wagon.type == "Cargo"
-    wagon.occupy_seat
-    puts "One seat was occupied. The available seats left in wagon #{wagon.number} is #{wagon.available_seats}."
-    rescue => e
-    puts e.message
-  end
-
-  def occupy_volume
-    raise "There are no wagons yet." if @wagons.empty?
-    puts "Enter the cargo wagon number:"
-    wagon = select_wagon
-    raise "You should choose a train - type Cargo." if wagon.type == "Passenger"
-    puts "Enter the volume you want to occupy (in m3):"
-    number = gets.chomp
-    raise "Not possible to occupy #{number} m3 in this wagon. Available volume in the wagon is #{wagon.available_volume}." if number.to_i > wagon.available_volume
-    wagon.occupy_volume(number)
-    puts "#{number} m3 was occupied. The available volume left in wagon #{wagon.number} is #{wagon.available_volume}."
-    rescue => e
+    if wagon.type == "Passenger"
+      wagon.occupy
+      puts "One seat was occupied. The available seats left in wagon #{wagon.number} is #{wagon.available}."
+    elsif wagon.type == "Cargo"
+      puts "Enter the volume you want to occupy (in m3):"
+      number = gets.chomp
+      wagon.occupy(number)
+      puts "#{number} m3 was occupied. The available volume left in wagon #{wagon.number} is #{wagon.available}."
+    end
+  rescue => e
       puts e.message
-  end
+    end
 
   def operate
     puts "    Enter 1, if you want to add a station to a route.
@@ -410,8 +399,7 @@ class Rr
     Enter 8, if you want a train to take a route.
     Enter 9, if you want to move a train forward.
     Enter 10, if you want to move a train backward.
-    Enter 11, if you want to occupy a seat in a passenger train.
-    Enter 12, if you want to occupy volume in a cargo train
+    Enter 11, if you want to occupy a seat in a passenger train or volume in a cargo train.
     Enter 0, if you want to go back."
     operate_case = gets.chomp.to_i
     case operate_case
@@ -436,9 +424,7 @@ class Rr
     when 10
       move_backward
     when 11
-      occupy_seat
-    when 12
-      occupy_volume
+      occupy
     when 0
       start               
     end

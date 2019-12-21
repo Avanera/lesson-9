@@ -17,12 +17,12 @@ Rr.new.start
 
 
 
-puts @stations
-puts @passenger_trains
-puts @cargo_trains
-puts @passenger_wagons
-puts @cargo_wagons
-puts @routes
+# puts @stations
+# puts @passenger_trains
+# puts @cargo_trains
+# puts @passenger_wagons
+# puts @cargo_wagons
+# puts @routes
 
 
 

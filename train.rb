@@ -21,6 +21,13 @@ class Train
     @@trains_hash[number] = self
     @@trains << self
     end
+# написать метод, который принимает блок и проходит по всем вагонам поезда (вагоны 
+# должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
+  def each_wagon(&block)
+    @wagons.each do |wagon|
+      block.call(wagon)
+    end
+  end
 
   def valid?
     validate!

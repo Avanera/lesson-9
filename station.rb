@@ -1,18 +1,21 @@
+# frozen_string_literal: true
+
 class Station
   include InstanceCounter
   attr_reader :trains, :name
-  @@all_stations = []
-  NAME_FORMAT = /^[a-z\s*\'*\-*\d*]+$/i
+  @all_stations = []
+  NAME_FORMAT = /^[a-z\s*\'*\-*\d*]+$/i.freeze
 
   def initialize(name)
     @name = name
     @trains = []
-    @@all_stations << self
+    @all_stations << self
     register_instance
     validate!
   end
-#написать метод, который принимает блок и 
-#проходит по всем поездам на станции, передавая каждый поезд в блок.
+
+  # написать метод, который принимает блок и
+  # проходит по всем поездам на станции, передавая каждый поезд в блок.
   def each_train
     @trains.each do |train|
       yield(train)
@@ -21,8 +24,12 @@ class Station
 
   def show_trains(type)
     @trains.each do |train|
-      puts "Passenger trains located in #{self.name}: #{train.number}" if train.type == "Passenger" && type == train.type
-      puts "Cargo trains located in #{self.name}: #{train.number}" if train.type == "Cargo" && type == train.type
+      if train.type == 'Passenger' && type == train.type
+        puts "Passenger trains located in #{name}: #{train.number}"
+      end
+      if train.type == 'Cargo' && type == train.type
+        puts "Cargo trains located in #{name}: #{train.number}"
+      end
     end
   end
 
@@ -35,11 +42,11 @@ class Station
   end
 
   def self.all
-    @@all_stations
+    @all_stations
   end
 
   def validate!
     raise "Station name can't be nil" if @name == ''
-    raise "Station name has invalid format" if @name !~ NAME_FORMAT 
+    raise 'Station name has invalid format' if @name !~ NAME_FORMAT
   end
 end

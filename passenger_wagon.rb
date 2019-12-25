@@ -1,6 +1,12 @@
-class PassengerWagon < Wagon
+# frozen_string_literal: true
 
+class PassengerWagon < Wagon
   def occupy
-    @available = @available - 1
+    if @available < 1
+      raise "Not possible to occupy a seat in this wagon.
+      Available seats in the wagon is #{@available}."
+    end
+
+    @available -= 1
   end
 end

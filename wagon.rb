@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class Wagon
   include Producer
   attr_reader :number, :type, :available
 
-  NUMBER_FORMAT = /^\d{6}$/i
-  TYPE_FORMAT = /Passenger|Cargo/i
+  NUMBER_FORMAT = /^\d{6}$/i.freeze
+  TYPE_FORMAT = /Passenger|Cargo/i.freeze
 
   def initialize(number, type, available)
     @number = number
@@ -15,12 +17,14 @@ class Wagon
 
   def validate!
     raise "Number can't be nil" if @number == ''
-    raise "Number has invalid format. Enter 6 numbers without spaces." if @number !~ NUMBER_FORMAT 
+    if @number !~ NUMBER_FORMAT
+      raise 'Number has invalid format. Enter 6 numbers without spaces.'
+    end
   end
 
   def show_availables
-    puts "#{self.available} available seats. \n\n" if @type == "Passenger"
-    puts "#{self.available} m3 available volume. \n\n" if @type == "Cargo"
+    puts "#{available} available seats. \n\n" if @type == 'Passenger'
+    puts "#{available} m3 available volume. \n\n" if @type == 'Cargo'
   end
 
   def occupied

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CargoTrain < Train
   include InstanceCounter
   def add_wagons(wagon)

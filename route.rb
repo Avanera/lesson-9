@@ -18,10 +18,8 @@ class Route
     @stations.insert(-2, station) # добавить элемент в любое место массива
   end
 
-  def delete_station(station) # Avoid comparing a variable with multiple items in a conditional, use Array#include? instead.
-    if station == @depart || station == @arrive
-      raise 'You can not delete the station of arrival or departure'
-    end
+  def delete_station(station)
+    raise 'You can not delete the station of arrival or departure' if [@depart, @arrive].include?(station)
 
     @stations.delete(station)
   end
@@ -32,14 +30,9 @@ class Route
     end
   end
 
-  def validate! # Cyclomatic complexity for validate! is too high.
+  def validate!
     raise "Route name can't be nil" if @name == ''
     raise 'Route name has invalid format' if @name !~ NAME_FORMAT
     raise "Station name can't be nil" if (@arrive == '') || (@depart == '')
-    if (@arrive.name !~ NAME_FORMAT) || (@depart.name !~ NAME_FORMAT)
-      # Use a guard clause (return unless (@arrive.name !~ NAME_FORMAT) || (@depart.name !~ NAME_FORMAT))
-      # instead of wrapping the code inside a conditional expression.
-      raise 'Station name has invalid format'
-    end
   end
 end

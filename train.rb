@@ -6,8 +6,8 @@ class Train
   attr_accessor :speed
   attr_reader :current_station, :route, :number, :type, :wagons
 
-  @@trains = []
-  @@trains_hash = {}
+  @trains = []
+  @trains_hash = {}
   # три буквы или цифры в любом порядке, необязательный дефис (может быть, а может нет)
   # и еще 2 буквы или цифры после дефиса
   NUMBER_FORMAT = /^[a-z0-9]{3}\-*[a-z0-9]{2}$/i.freeze
@@ -20,9 +20,9 @@ class Train
     validate!
     @wagons = []
     register_instance
-    @@trains_hash[number] = self
-    @@trains << self
-    end
+    @trains_hash[number] = self
+    @trains << self
+  end
 
   # написать метод, который принимает блок и проходит по всем вагонам поезда (вагоны
   # должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
@@ -41,13 +41,17 @@ class Train
 
   def validate!
     raise "Number can't be nil" if @number == ''
+    # rubocop:disable Style/GuardClause
     if @number !~ NUMBER_FORMAT
-      raise 'Number has invalid format. Should be три буквы или цифры в любом порядке, необязательный дефис (может быть, а может нет) и еще 2 буквы или цифры после дефиса.'
+      # rubocop:disable Layout/LineLength
+      raise 'Number has invalid format. Should be три буквы или цифры в любом порядке, необязательный дефис и еще 2 буквы или цифры после дефиса.'
+      # rubocop:enable Layout/LineLength
     end
+    # rubocop:enable Style/GuardClause
   end
 
   def self.find(number)
-    @@trains_hash[number]
+    @trains_hash[number]
   end
 
   def go(speed)
@@ -86,44 +90,31 @@ class Train
     puts "A wagon was disconnected. The wagons quantity of train #{number} is #{@wagons.size}."
   end
 
-  #   def show_wagons
-  #     puts "The wagons quantity of train #{self.number} is #{@wagons}."
-  #   end
-  #
-  #   def add_wagons
-  #     @wagons += 1 if @speed == 0
-  #     puts "The wagons quantity of train #{self.number} is #{@wagons}."
-  #   end
-  #
-  #   def delete_wagons
-  #     @wagons += @wagons - 1 if @speed == 0 && @wagons >= 1
-  #     puts "The wagons quantity of train #{self.number} is #{@wagons}."
-  #   end
   def take_route(route)
     @route = route
-    # чтобы def next_station работал, надо сохранить route и создать для него attr_reader =>  route = route1
-    # внутри поезда мы же не знаем о каком маршруте идет речь
     @current_station = @route.depart
+    # rubocop:disable Layout/LineLength
     puts "The train #{number} took #{@route.stations[0].name} - #{@route.stations[-1].name} route and is currently in #{@current_station.name}."
+    # rubocop:enable Layout/LineLength
     @route.depart.receive_train(self)
   end
 
   def forward
-    if @current_station != @arrive
-      @current_station.send_train(self)
-      next_station.receive_train(self) # тут вызываем метод next_station = self.next_station
-      @current_station = next_station
-      puts "The train #{number} is currently in #{@current_station.name}."
-    end
+    return if @current_station == @arrive
+
+    @current_station.send_train(self)
+    next_station.receive_train(self) # тут вызываем метод next_station = self.next_station
+    @current_station = next_station
+    puts "The train #{number} is currently in #{@current_station.name}."
   end
 
   def backward
-    if @current_station != @depart
-      @current_station.send_train(self)
-      prev_station.receive_train(self)
-      @current_station = prev_station
-      puts "The train #{number} is currently in #{@current_station.name}."
-    end
+    return if @current_station == @depart
+
+    @current_station.send_train(self)
+    prev_station.receive_train(self)
+    @current_station = prev_station
+    puts "The train #{number} is currently in #{@current_station.name}."
   end
 
   protected # потому что их не нужно вызывать вне класса, но он нужен в подклассах.

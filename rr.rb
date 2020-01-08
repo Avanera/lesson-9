@@ -46,19 +46,6 @@ class Rr
 
   def info
     puts 'All stations:'
-    # @stations.each.with_index(1) do |station|
-    #   puts "#{station.name}: "
-    #   station.show_trains("Cargo")
-    #   station.show_trains("Passenger")
-    # end
-    # Выводить список поездов на станции , используя  метод each_train
-    # для каждого поезда на станции выводить список вагонов в формате:
-    # Номер вагона (можно назначать автоматически), тип вагона, кол-во свободных и занятых мест
-    # (для пассажирского вагона) или кол-во свsободного и занятого объема (для грузовых вагонов).
-    # А для каждого поезда на станции выводить список вагонов в формате:
-    #     - Номер вагона (можно назначать автоматически), тип вагона, кол-во свободных и занятых мест
-    #     (для пассажирского вагона) или кол-во свободного и занятого объема (для грузовых вагонов).
-
     @stations.each.with_index(1) do |station, index|
       puts "\n#{index}. Station #{station.name.capitalize}."
       if station.trains.empty?
@@ -121,29 +108,25 @@ class Rr
 
   def create_train
     begin
-       puts "Enter 1 to create Passenger train or 2 - to create Cargo train:
+      puts "Enter 1 to create Passenger train or 2 - to create Cargo train:
       1 - Passenger
       2 - Cargo."
-       v = gets.chomp
-       type = 'Passenger' if v == '1'
-       type = 'Cargo' if v == '2'
+      v = gets.chomp
+      type = 'Passenger' if v == '1'
+      type = 'Cargo' if v == '2'
 
-       if type !~ Train::TYPE_FORMAT
-         raise "Type has invalid format. Should be 1 for 'Passenger' or 2 for 'Cargo'."
-      end
+      raise "Type has invalid format. Should be 1 for 'Passenger' or 2 for 'Cargo'." if type !~ Train::TYPE_FORMAT
 
-       puts 'Enter the number of the train'
-       number = gets.chomp
-       train = PassengerTrain.new(number, type) if type == 'Passenger'
-       train = CargoTrain.new(number, type) if type == 'Cargo'
+      puts 'Enter the number of the train'
+      number = gets.chomp
+      train = PassengerTrain.new(number, type) if type == 'Passenger'
+      train = CargoTrain.new(number, type) if type == 'Cargo'
     rescue StandardError => e
       puts e.message
       retry
-     end
-    @trains << train
-    if @trains.include? train
-      puts "You have created a new #{type} train '#{number}'."
     end
+    @trains << train
+    puts "You have created a new #{type} train '#{number}'." if @trains.include? train
   end
 
   def create_wagon
@@ -155,9 +138,7 @@ class Rr
       type = 'Passenger' if v == '1'
       type = 'Cargo' if v == '2'
 
-      if type !~ Wagon::TYPE_FORMAT
-        raise "Type has invalid format. Should be 1 for 'Passenger' or 2 for 'Cargo'."
-      end
+      raise "Type has invalid format. Should be 1 for 'Passenger' or 2 for 'Cargo'." if type !~ Wagon::TYPE_FORMAT
 
       puts 'Enter the number of the wagon'
       number = gets.chomp
@@ -208,9 +189,7 @@ class Rr
       train.show_speed
       train.show_wagons
       puts "On route #{train.route.name}." unless train.route.nil?
-      unless train.current_station.nil?
-        puts "Currently in #{train.current_station.name}."
-      end
+      puts "Currently in #{train.current_station.name}." unless train.current_station.nil?
     end
   end
 
@@ -415,30 +394,18 @@ class Rr
     Enter 0, if you want to go back."
     operate_case = gets.chomp.to_i
     case operate_case
-    when 1
-      add_station_to_route
-    when 2
-      delete_station_from_route
-    when 3
-      speed_up
-    when 4
-      break_speed
-    when 5
-      stop_train
-    when 6
-      connect_wagons
-    when 7
-      disconnect_wagons
-    when 8
-      to_take_route
-    when 9
-      move_forward
-    when 10
-      move_backward
-    when 11
-      occupy
-    when 0
-      start
+    when 1 then add_station_to_route
+    when 2 then delete_station_from_route
+    when 3 then speed_up
+    when 4 then break_speed
+    when 5 then stop_train
+    when 6 then connect_wagons
+    when 7 then disconnect_wagons
+    when 8 then to_take_route
+    when 9 then move_forward
+    when 10 then move_backward
+    when 11 then occupy
+    when 0 then start
     end
   end
 
@@ -449,14 +416,10 @@ class Rr
       Enter 3, if you want to receive current data about objects.
       Enter 0, if you want to quit the program."
       case gets.chomp.to_i
-      when 1
-        create
-      when 2
-        operate
-      when 3
-        info
-      when 0
-        exit
+      when 1 then create
+      when 2 then operate
+      when 3 then info
+      when 0 then exit
       end
     end
   end

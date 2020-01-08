@@ -1,0 +1,35 @@
+RunRailsCops: false
+
+DisplayCopNames: true
+
+StyleGuideCopsOnly: false
+
+
+Layout/LineLength:
+  Max: 120
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 30
+
+Style/AsciiComments:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 400
+
+Metrics/AbcSize:
+  Exclude:
+    - rr.rb
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - rr.rb
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - rr.rb
+
+

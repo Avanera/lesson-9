@@ -24,12 +24,8 @@ class Station
 
   def show_trains(type)
     @trains.each do |train|
-      if train.type == 'Passenger' && type == train.type
-        puts "Passenger trains located in #{name}: #{train.number}"
-      end
-      if train.type == 'Cargo' && type == train.type
-        puts "Cargo trains located in #{name}: #{train.number}"
-      end
+      puts "Passenger trains located in #{name}: #{train.number}" if train.type == 'Passenger' && type == train.type
+      puts "Cargo trains located in #{name}: #{train.number}" if train.type == 'Cargo' && type == train.type
     end
   end
 

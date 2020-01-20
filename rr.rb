@@ -8,41 +8,40 @@ class Rr
     @trains = []
     @wagons = []
     @routes = []
-    seed
+    # seed
   end
-
-  def seed
-    station1 = Station.new('mmm-mm')
-    @stations << station1
-    station2 = Station.new('ppp-pp')
-    @stations << station2
-    station3 = Station.new('nnn-nn')
-    @stations << station3
-
-    route = Route.new('K', station1, station2)
-    @routes << route
-
-    route.add_station(station3)
-    # route.delete_station(station3)
-
-    train1 = PassengerTrain.new('555-55', 'Passenger')
-    @trains << train1
-
-    train2 = CargoTrain.new('666-66', 'Cargo')
-    @trains << train2
-
-    train1.take_route(route)
-    train2.take_route(route)
-
-    wagon1 = PassengerWagon.new('230000', 'Passenger', '54')
-    @wagons << wagon1
-
-    wagon2 = CargoWagon.new('340000', 'Cargo', '1000')
-    @wagons << wagon2
-
-    train1.add_wagons(wagon1)
-    train2.add_wagons(wagon2)
-  end
+  #   def seed
+  #     station1 = Station.new('mmm-mm')
+  #     @stations << station1
+  #     station2 = Station.new('ppp-pp')
+  #     @stations << station2
+  #     station3 = Station.new('nnn-nn')
+  #     @stations << station3
+  #
+  #     route = Route.new('K', station1, station2)
+  #     @routes << route
+  #
+  #     route.add_station(station3)
+  #     # route.delete_station(station3)
+  #
+  #     train1 = PassengerTrain.new('555-55', 'Passenger')
+  #     @trains << train1
+  #
+  #     train2 = CargoTrain.new('666-66', 'Cargo')
+  #     @trains << train2
+  #
+  #     train1.take_route(route)
+  #     train2.take_route(route)
+  #
+  #     wagon1 = PassengerWagon.new('230000', 'Passenger', '54')
+  #     @wagons << wagon1
+  #
+  #     wagon2 = CargoWagon.new('340000', 'Cargo', '1000')
+  #     @wagons << wagon2
+  #
+  #     train1.add_wagons(wagon1)
+  #     train2.add_wagons(wagon2)
+  #   end
 
   def info
     puts 'All stations:'

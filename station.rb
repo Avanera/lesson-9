@@ -2,9 +2,11 @@
 
 class Station
   include InstanceCounter
+  include Validation
   attr_reader :trains, :name
   @all_stations = []
-  NAME_FORMAT = /^[a-z\s*\'*\-*\d*]+$/i.freeze
+  validate :name, :presence
+  validate :name, :format, /^[a-z\s*\'*\-*\d*]+$/i.freeze
 
   def initialize(name)
     @name = name
@@ -14,8 +16,7 @@ class Station
     validate!
   end
 
-  # написать метод, который принимает блок и
-  # проходит по всем поездам на станции, передавая каждый поезд в блок.
+  # метод,кот.проходит по всем поездам на станции, передавая каж поезд в блок.
   def each_train
     @trains.each do |train|
       yield(train)
@@ -39,10 +40,5 @@ class Station
 
   def self.all
     @all_stations
-  end
-
-  def validate!
-    raise "Station name can't be nil" if @name == ''
-    raise 'Station name has invalid format' if @name !~ NAME_FORMAT
   end
 end

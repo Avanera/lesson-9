@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
+require 'byebug'
+require_relative 'accessors'
 require_relative 'producer'
 require_relative 'instance_counter'
+require_relative 'module_validation'
 require_relative 'rr'
 require_relative 'station'
 require_relative 'route'

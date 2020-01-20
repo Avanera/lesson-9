@@ -2,8 +2,12 @@
 
 class Route
   include InstanceCounter
+  include Validation
   attr_reader :stations, :depart, :arrive, :name
-  NAME_FORMAT = /^[a-z\s\'\-\d]+$/i.freeze
+  validate :name, :presence
+  validate :name, :format, /^[a-z\s\'\-\d]+$/i.freeze
+  validate :arrive, :type, Station
+  validate :depart, :type, Station
 
   def initialize(name, depart, arrive)
     @name = name
@@ -28,11 +32,5 @@ class Route
     @stations.each.with_index(1) do |station, index|
       puts "Station #{index}: #{station.name}."
     end
-  end
-
-  def validate!
-    raise "Route name can't be nil" if @name == ''
-    raise 'Route name has invalid format' if @name !~ NAME_FORMAT
-    raise "Station name can't be nil" if (@arrive == '') || (@depart == '')
   end
 end

@@ -2,10 +2,12 @@
 
 class Wagon
   include Producer
+  include InstanceCounter
+  include Validation
   attr_reader :number, :type, :available
-
-  NUMBER_FORMAT = /^\d{6}$/i.freeze
-  TYPE_FORMAT = /Passenger|Cargo/i.freeze
+  validate :number, :presence
+  validate :number, :format, /^\d{6}$/i.freeze
+  validate :type, :format, /Passenger|Cargo/i.freeze
 
   def initialize(number, type, available)
     @number = number
@@ -13,11 +15,7 @@ class Wagon
     @available = available.to_i
     @total = available.to_i
     validate!
-  end
-
-  def validate!
-    raise "Number can't be nil" if @number == ''
-    raise 'Number has invalid format. Enter 6 numbers without spaces.' if @number !~ NUMBER_FORMAT
+    register_instance
   end
 
   def show_availables

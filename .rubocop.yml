@@ -1,12 +1,3 @@
-RunRailsCops: 
-  Enabled: false
-
-DisplayCopNames: 
-  Enabled: true
-
-StyleGuideCopsOnly: 
-  Enabled: false
-
 Layout/LineLength:
   Max: 120
 

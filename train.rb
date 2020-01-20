@@ -3,15 +3,21 @@
 class Train
   include Producer
   include InstanceCounter
+  include Validation
+  extend Acсessors
   attr_accessor :speed
   attr_reader :current_station, :route, :number, :type, :wagons
-
-  @trains = []
-  @trains_hash = {}
-  # три буквы или цифры в любом порядке, необязательный дефис (может быть, а может нет)
+  attr_accessor_with_history :a
+  strong_attr_accessor :b, String
+  validate :number, :presence
+  # три буквы или цифры в любом порядке, необязательный дефис
   # и еще 2 буквы или цифры после дефиса
-  NUMBER_FORMAT = /^[a-z0-9]{3}\-*[a-z0-9]{2}$/i.freeze
-  TYPE_FORMAT = /Passenger|Cargo/i.freeze
+  validate :number, :format, /^[a-z0-9]{3}\-*[a-z0-9]{2}$/i.freeze
+  validate :type, :format, /Passenger|Cargo/i.freeze
+  # rubocop:disable Style/ClassVars
+  @@trains = []
+  @@trains_hash = {}
+  # rubocop:enable Style/ClassVars
 
   def initialize(number, type)
     @number = number
@@ -20,8 +26,8 @@ class Train
     validate!
     @wagons = []
     register_instance
-    @trains_hash[number] = self
-    @trains << self
+    @@trains_hash[number] = self
+    @@trains << self
   end
 
   # написать метод, который принимает блок и проходит по всем вагонам поезда (вагоны
@@ -32,26 +38,8 @@ class Train
     end
   end
 
-  def valid?
-    validate!
-    true # возвращаем true, если метод validate! не выбросил исключение
-  rescue StandardError
-    false # возвращаем false, если было исключение
-  end
-
-  def validate!
-    raise "Number can't be nil" if @number == ''
-    # rubocop:disable Style/GuardClause
-    if @number !~ NUMBER_FORMAT
-      # rubocop:disable Layout/LineLength
-      raise 'Number has invalid format. Should be три буквы или цифры в любом порядке, необязательный дефис и еще 2 буквы или цифры после дефиса.'
-      # rubocop:enable Layout/LineLength
-    end
-    # rubocop:enable Style/GuardClause
-  end
-
   def self.find(number)
-    @trains_hash[number]
+    @@trains_hash[number]
   end
 
   def go(speed)
@@ -121,7 +109,7 @@ class Train
 
   def next_station
     i = @route.stations.index(@current_station)
-    @route.stations[i + 1] # метод возвращает значение, лишнюю переменную не нужно создавать.
+    @route.stations[i + 1]
   end
 
   def prev_station
